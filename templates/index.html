@@ -39,6 +39,16 @@
             }
         }
         
+        .main-container {
+            display: flex;
+            width: 100%;
+            max-width: 1200px;
+            height: 95vh;
+            gap: 20px;
+            transition: all 2.5s ease;
+            justify-content: center;
+        }
+        
         .chat-container {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(20px);
@@ -46,7 +56,7 @@
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
             width: 100%;
             max-width: 500px;
-            height: 85vh;
+            height: 100%;
             display: flex;
             flex-direction: column;
             overflow: hidden;
@@ -54,6 +64,32 @@
             opacity: 0;
             transform: translateY(30px) scale(0.95);
             animation: slideIn 0.8s ease-out forwards;
+            transition: all 2.5s ease;
+        }
+        
+        .workout-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            width: 0;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            opacity: 0;
+            transition: all 2.5s ease;
+        }
+        
+        .workout-container.show {
+            width: 100%;
+            max-width: 900px;
+            opacity: 1;
+        }
+        
+        .chat-container.workout-mode {
+            max-width: 400px;
         }
         
         @keyframes slideIn {
@@ -76,7 +112,21 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
         
-        .chat-header::before {
+        .workout-header {
+            background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+            color: white;
+            padding: 28px 20px;
+            text-align: center;
+            font-size: 20px;
+            font-weight: 600;
+            letter-spacing: -0.025em;
+            position: relative;
+            overflow: hidden;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .chat-header::before,
+        .workout-header::before {
             content: '';
             position: absolute;
             top: 0;
@@ -104,6 +154,16 @@
             scroll-behavior: smooth;
             opacity: 0;
             animation: fadeIn 0.6s ease-out 0.3s forwards;
+            max-height: calc(100vh - 200px);
+            min-height: 300px;
+        }
+        
+        .workout-content {
+            flex: 1;
+            padding: 24px;
+            overflow-y: auto;
+            background: rgba(0, 0, 0, 0.3);
+            scroll-behavior: smooth;
         }
         
         @keyframes fadeIn {
@@ -302,6 +362,105 @@
                 box-shadow: 0 4px 20px rgba(255, 255, 255, 0.1);
             }
         }
+        /* Workout Plan Styles */
+        
+        .workout-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            padding: 16px 0;
+        }
+        
+        .workout-day {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            padding: 16px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: workoutSlideIn 1.2s ease-out forwards;
+        }
+        
+        .workout-day:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+        
+        @keyframes workoutSlideIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .workout-day-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .day-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #ffffff;
+        }
+        
+        .day-number {
+            background: linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%);
+            color: #000000;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .workout-exercises {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .exercise-item {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .exercise-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .exercise-name {
+            font-weight: 500;
+            color: #ffffff;
+            margin-bottom: 2px;
+            font-size: 14px;
+        }
+        
+        .exercise-details {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .rest-day {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.6);
+            font-style: italic;
+            padding: 20px;
+        }
         /* Floating particles background */
         
         .particles {
@@ -332,35 +491,53 @@
         }
         /* Scrollbar styling */
         
-        .chat-messages::-webkit-scrollbar {
+        .chat-messages::-webkit-scrollbar,
+        .workout-content::-webkit-scrollbar {
             width: 8px;
         }
         
-        .chat-messages::-webkit-scrollbar-track {
+        .chat-messages::-webkit-scrollbar-track,
+        .workout-content::-webkit-scrollbar-track {
             background: transparent;
         }
         
-        .chat-messages::-webkit-scrollbar-thumb {
+        .chat-messages::-webkit-scrollbar-thumb,
+        .workout-content::-webkit-scrollbar-thumb {
             background: rgba(255, 255, 255, 0.3);
             border-radius: 4px;
             transition: background 0.3s ease;
         }
         
-        .chat-messages::-webkit-scrollbar-thumb:hover {
+        .chat-messages::-webkit-scrollbar-thumb:hover,
+        .workout-content::-webkit-scrollbar-thumb:hover {
             background: rgba(255, 255, 255, 0.5);
         }
         /* Mobile responsiveness */
         
         @media (max-width: 768px) {
-            .chat-container {
+            .main-container {
+                flex-direction: column;
                 height: 95vh;
-                margin: 10px;
-                border-radius: 20px;
+            }
+            .chat-container,
+            .workout-container {
+                height: auto;
+                max-width: none;
+            }
+            .workout-container.show {
+                max-width: none;
+            }
+            .chat-container.workout-mode {
+                max-width: none;
+            }
+            .workout-grid {
+                grid-template-columns: 1fr;
             }
             .message-content {
                 max-width: 85%;
             }
-            .chat-header {
+            .chat-header,
+            .workout-header {
                 padding: 24px 16px;
                 font-size: 18px;
             }
@@ -387,24 +564,35 @@
     <!-- Floating particles -->
     <div class="particles" id="particles"></div>
 
-    <div class="chat-container">
-        <div class="chat-header">
-            Fitness Assistant
-        </div>
+    <div class="main-container">
+        <div class="chat-container" id="chatContainer">
+            <div class="chat-header">
+                Fitness Assistant
+            </div>
 
-        <div class="chat-messages" id="chatMessages">
-            <div class="welcome-message">
-                Hey there! 👋 I'm your fitness buddy. Need a workout plan, some exercise ideas, or just want to chat? I'm here for you!
+            <div class="chat-messages" id="chatMessages">
+                <div class="welcome-message">
+                    Hey there! 👋 I'm your fitness buddy. Need a workout plan, some exercise ideas, or just want to chat? I'm here for you!
+                </div>
+            </div>
+
+            <div class="typing-indicator" id="typingIndicator">
+                I'm typing...
+            </div>
+
+            <div class="chat-input-container">
+                <input type="text" id="messageInput" class="chat-input" placeholder="What's on your mind?" autocomplete="off">
+                <button id="sendButton" class="send-button">Send</button>
             </div>
         </div>
 
-        <div class="typing-indicator" id="typingIndicator">
-            I'm typing...
-        </div>
-
-        <div class="chat-input-container">
-            <input type="text" id="messageInput" class="chat-input" placeholder="What's on your mind?" autocomplete="off">
-            <button id="sendButton" class="send-button">Send</button>
+        <div class="workout-container" id="workoutContainer">
+            <div class="workout-header">
+                Your Workout Plan
+            </div>
+            <div class="workout-content" id="workoutContent">
+                <!-- Workout plan will be dynamically inserted here -->
+            </div>
         </div>
     </div>
 
@@ -414,6 +602,9 @@
         const sendButton = document.getElementById('sendButton');
         const typingIndicator = document.getElementById('typingIndicator');
         const particlesContainer = document.getElementById('particles');
+        const chatContainer = document.getElementById('chatContainer');
+        const workoutContainer = document.getElementById('workoutContainer');
+        const workoutContent = document.getElementById('workoutContent');
 
         // Create floating particles
         function createParticles() {
@@ -442,8 +633,10 @@
             messageDiv.appendChild(messageContent);
             chatMessages.appendChild(messageDiv);
 
-            // Scroll to bottom
-            chatMessages.scrollTop = chatMessages.scrollHeight;
+            // Scroll to bottom with a small delay to ensure the message is rendered
+            setTimeout(() => {
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }, 100);
 
             // Remove animation class after animation completes
             setTimeout(() => {
@@ -457,6 +650,401 @@
             if (show) {
                 chatMessages.scrollTop = chatMessages.scrollHeight;
             }
+        }
+
+        // Function to create workout plan display
+        function createWorkoutPlan(days) {
+            const workoutGrid = document.createElement('div');
+            workoutGrid.className = 'workout-grid';
+
+            const workoutPlans = {
+                3: [{
+                    day: 1,
+                    title: 'Push Day',
+                    exercises: [{
+                        name: 'Bench Press',
+                        details: '3 sets x 8-12 reps'
+                    }, {
+                        name: 'Overhead Press',
+                        details: '3 sets x 8-12 reps'
+                    }, {
+                        name: 'Incline Dumbbell Press',
+                        details: '3 sets x 10-15 reps'
+                    }, {
+                        name: 'Lateral Raises',
+                        details: '3 sets x 12-15 reps'
+                    }, {
+                        name: 'Tricep Dips',
+                        details: '3 sets x 10-15 reps'
+                    }]
+                }, {
+                    day: 2,
+                    title: 'Pull Day',
+                    exercises: [{
+                        name: 'Deadlifts',
+                        details: '3 sets x 6-10 reps'
+                    }, {
+                        name: 'Barbell Rows',
+                        details: '3 sets x 8-12 reps'
+                    }, {
+                        name: 'Pull-ups',
+                        details: '3 sets x 6-12 reps'
+                    }, {
+                        name: 'Bicep Curls',
+                        details: '3 sets x 10-15 reps'
+                    }, {
+                        name: 'Face Pulls',
+                        details: '3 sets x 12-15 reps'
+                    }]
+                }, {
+                    day: 3,
+                    title: 'Legs Day',
+                    exercises: [{
+                        name: 'Squats',
+                        details: '3 sets x 8-12 reps'
+                    }, {
+                        name: 'Romanian Deadlifts',
+                        details: '3 sets x 8-12 reps'
+                    }, {
+                        name: 'Leg Press',
+                        details: '3 sets x 10-15 reps'
+                    }, {
+                        name: 'Calf Raises',
+                        details: '3 sets x 15-20 reps'
+                    }, {
+                        name: 'Planks',
+                        details: '3 sets x 30-60 seconds'
+                    }]
+                }],
+                4: [{
+                    day: 1,
+                    title: 'Upper Body',
+                    exercises: [{
+                        name: 'Bench Press',
+                        details: '3 sets x 8-12 reps'
+                    }, {
+                        name: 'Pull-ups',
+                        details: '3 sets x 6-12 reps'
+                    }, {
+                        name: 'Overhead Press',
+                        details: '3 sets x 8-12 reps'
+                    }, {
+                        name: 'Barbell Rows',
+                        details: '3 sets x 8-12 reps'
+                    }, {
+                        name: 'Dips',
+                        details: '3 sets x 8-12 reps'
+                    }]
+                }, {
+                    day: 2,
+                    title: 'Lower Body',
+                    exercises: [{
+                        name: 'Squats',
+                        details: '3 sets x 8-12 reps'
+                    }, {
+                        name: 'Deadlifts',
+                        details: '3 sets x 6-10 reps'
+                    }, {
+                        name: 'Leg Press',
+                        details: '3 sets x 10-15 reps'
+                    }, {
+                        name: 'Calf Raises',
+                        details: '3 sets x 15-20 reps'
+                    }, {
+                        name: 'Planks',
+                        details: '3 sets x 30-60 seconds'
+                    }]
+                }, {
+                    day: 3,
+                    title: 'Rest Day',
+                    exercises: []
+                }, {
+                    day: 4,
+                    title: 'Full Body',
+                    exercises: [{
+                        name: 'Squats',
+                        details: '3 sets x 8-12 reps'
+                    }, {
+                        name: 'Bench Press',
+                        details: '3 sets x 8-12 reps'
+                    }, {
+                        name: 'Pull-ups',
+                        details: '3 sets x 6-12 reps'
+                    }, {
+                        name: 'Overhead Press',
+                        details: '3 sets x 8-12 reps'
+                    }, {
+                        name: 'Planks',
+                        details: '3 sets x 30-60 seconds'
+                    }]
+                }],
+                5: [{
+                    day: 1,
+                    title: 'Push Day',
+                    exercises: [{
+                        name: 'Bench Press',
+                        details: '3 sets x 8-12 reps'
+                    }, {
+                        name: 'Overhead Press',
+                        details: '3 sets x 8-12 reps'
+                    }, {
+                        name: 'Incline Dumbbell Press',
+                        details: '3 sets x 10-15 reps'
+                    }, {
+                        name: 'Lateral Raises',
+                        details: '3 sets x 12-15 reps'
+                    }, {
+                        name: 'Tricep Dips',
+                        details: '3 sets x 10-15 reps'
+                    }]
+                }, {
+                    day: 2,
+                    title: 'Pull Day',
+                    exercises: [{
+                        name: 'Deadlifts',
+                        details: '3 sets x 6-10 reps'
+                    }, {
+                        name: 'Barbell Rows',
+                        details: '3 sets x 8-12 reps'
+                    }, {
+                        name: 'Pull-ups',
+                        details: '3 sets x 6-12 reps'
+                    }, {
+                        name: 'Bicep Curls',
+                        details: '3 sets x 10-15 reps'
+                    }, {
+                        name: 'Face Pulls',
+                        details: '3 sets x 12-15 reps'
+                    }]
+                }, {
+                    day: 3,
+                    title: 'Legs Day',
+                    exercises: [{
+                        name: 'Squats',
+                        details: '3 sets x 8-12 reps'
+                    }, {
+                        name: 'Romanian Deadlifts',
+                        details: '3 sets x 8-12 reps'
+                    }, {
+                        name: 'Leg Press',
+                        details: '3 sets x 10-15 reps'
+                    }, {
+                        name: 'Calf Raises',
+                        details: '3 sets x 15-20 reps'
+                    }, {
+                        name: 'Planks',
+                        details: '3 sets x 30-60 seconds'
+                    }]
+                }, {
+                    day: 4,
+                    title: 'Rest Day',
+                    exercises: []
+                }, {
+                    day: 5,
+                    title: 'Full Body',
+                    exercises: [{
+                        name: 'Squats',
+                        details: '3 sets x 8-12 reps'
+                    }, {
+                        name: 'Bench Press',
+                        details: '3 sets x 8-12 reps'
+                    }, {
+                        name: 'Pull-ups',
+                        details: '3 sets x 6-12 reps'
+                    }, {
+                        name: 'Overhead Press',
+                        details: '3 sets x 8-12 reps'
+                    }, {
+                        name: 'Planks',
+                        details: '3 sets x 30-60 seconds'
+                    }]
+                }],
+                7: [{
+                    day: 1,
+                    title: 'Push Day',
+                    exercises: [{
+                        name: 'Bench Press',
+                        details: '3 sets x 8-12 reps'
+                    }, {
+                        name: 'Overhead Press',
+                        details: '3 sets x 8-12 reps'
+                    }, {
+                        name: 'Incline Dumbbell Press',
+                        details: '3 sets x 10-15 reps'
+                    }, {
+                        name: 'Lateral Raises',
+                        details: '3 sets x 12-15 reps'
+                    }, {
+                        name: 'Tricep Dips',
+                        details: '3 sets x 10-15 reps'
+                    }]
+                }, {
+                    day: 2,
+                    title: 'Pull Day',
+                    exercises: [{
+                        name: 'Deadlifts',
+                        details: '3 sets x 6-10 reps'
+                    }, {
+                        name: 'Barbell Rows',
+                        details: '3 sets x 8-12 reps'
+                    }, {
+                        name: 'Pull-ups',
+                        details: '3 sets x 6-12 reps'
+                    }, {
+                        name: 'Bicep Curls',
+                        details: '3 sets x 10-15 reps'
+                    }, {
+                        name: 'Face Pulls',
+                        details: '3 sets x 12-15 reps'
+                    }]
+                }, {
+                    day: 3,
+                    title: 'Legs Day',
+                    exercises: [{
+                        name: 'Squats',
+                        details: '3 sets x 8-12 reps'
+                    }, {
+                        name: 'Romanian Deadlifts',
+                        details: '3 sets x 8-12 reps'
+                    }, {
+                        name: 'Leg Press',
+                        details: '3 sets x 10-15 reps'
+                    }, {
+                        name: 'Calf Raises',
+                        details: '3 sets x 15-20 reps'
+                    }, {
+                        name: 'Planks',
+                        details: '3 sets x 30-60 seconds'
+                    }]
+                }, {
+                    day: 4,
+                    title: 'Rest Day',
+                    exercises: []
+                }, {
+                    day: 5,
+                    title: 'Push Day 2',
+                    exercises: [{
+                        name: 'Dumbbell Bench Press',
+                        details: '3 sets x 8-12 reps'
+                    }, {
+                        name: 'Military Press',
+                        details: '3 sets x 8-12 reps'
+                    }, {
+                        name: 'Decline Push-ups',
+                        details: '3 sets x 10-15 reps'
+                    }, {
+                        name: 'Chest Flyes',
+                        details: '3 sets x 12-15 reps'
+                    }, {
+                        name: 'Skull Crushers',
+                        details: '3 sets x 10-15 reps'
+                    }]
+                }, {
+                    day: 6,
+                    title: 'Pull Day 2',
+                    exercises: [{
+                        name: 'Barbell Deadlifts',
+                        details: '3 sets x 6-10 reps'
+                    }, {
+                        name: 'T-Bar Rows',
+                        details: '3 sets x 8-12 reps'
+                    }, {
+                        name: 'Lat Pulldowns',
+                        details: '3 sets x 8-12 reps'
+                    }, {
+                        name: 'Hammer Curls',
+                        details: '3 sets x 10-15 reps'
+                    }, {
+                        name: 'Rear Delt Flyes',
+                        details: '3 sets x 12-15 reps'
+                    }]
+                }, {
+                    day: 7,
+                    title: 'Legs Day 2',
+                    exercises: [{
+                        name: 'Front Squats',
+                        details: '3 sets x 8-12 reps'
+                    }, {
+                        name: 'Sumo Deadlifts',
+                        details: '3 sets x 8-12 reps'
+                    }, {
+                        name: 'Hack Squats',
+                        details: '3 sets x 10-15 reps'
+                    }, {
+                        name: 'Seated Calf Raises',
+                        details: '3 sets x 15-20 reps'
+                    }, {
+                        name: 'Russian Twists',
+                        details: '3 sets x 30-60 seconds'
+                    }]
+                }]
+            };
+
+            const plan = workoutPlans[days] || workoutPlans[7];
+
+            // Clear the workout content first
+            workoutContent.innerHTML = '';
+            workoutContent.appendChild(workoutGrid);
+
+            // Create and add each day with a staggered delay
+            plan.forEach((dayPlan, index) => {
+                setTimeout(() => {
+                    const dayElement = document.createElement('div');
+                    dayElement.className = 'workout-day';
+
+                    const dayHeader = document.createElement('div');
+                    dayHeader.className = 'workout-day-header';
+
+                    const dayTitle = document.createElement('div');
+                    dayTitle.className = 'day-title';
+                    dayTitle.textContent = `Day ${dayPlan.day}: ${dayPlan.title}`;
+
+                    const dayNumber = document.createElement('div');
+                    dayNumber.className = 'day-number';
+                    dayNumber.textContent = dayPlan.day;
+
+                    dayHeader.appendChild(dayTitle);
+                    dayHeader.appendChild(dayNumber);
+
+                    const exercisesContainer = document.createElement('div');
+                    exercisesContainer.className = 'workout-exercises';
+
+                    if (dayPlan.exercises.length === 0) {
+                        const restDay = document.createElement('div');
+                        restDay.className = 'rest-day';
+                        restDay.textContent = 'Rest and Recovery';
+                        exercisesContainer.appendChild(restDay);
+                    } else {
+                        dayPlan.exercises.forEach(exercise => {
+                            const exerciseElement = document.createElement('div');
+                            exerciseElement.className = 'exercise-item';
+
+                            const exerciseName = document.createElement('div');
+                            exerciseName.className = 'exercise-name';
+                            exerciseName.textContent = exercise.name;
+
+                            const exerciseDetails = document.createElement('div');
+                            exerciseDetails.className = 'exercise-details';
+                            exerciseDetails.textContent = exercise.details;
+
+                            exerciseElement.appendChild(exerciseName);
+                            exerciseElement.appendChild(exerciseDetails);
+                            exercisesContainer.appendChild(exerciseElement);
+                        });
+                    }
+
+                    dayElement.appendChild(dayHeader);
+                    dayElement.appendChild(exercisesContainer);
+                    workoutGrid.appendChild(dayElement);
+                }, index * 800); // 800ms delay between each day
+            });
+        }
+
+        // Function to show workout plan
+        function showWorkoutPlan(days) {
+            chatContainer.classList.add('workout-mode');
+            workoutContainer.classList.add('show');
+            createWorkoutPlan(days);
         }
 
         // Function to send message to the server
@@ -480,6 +1068,21 @@
 
                 if (response.ok) {
                     addMessage(data.response, false);
+
+                    // Check if the response contains workout information
+                    if (data.response.toLowerCase().includes('workout')) {
+
+                        // Extract number of days from response, default to 7
+                        let days = 7; // default to 7 days
+                        if (data.response.includes('3')) days = 3;
+                        else if (data.response.includes('4')) days = 4;
+                        else if (data.response.includes('5')) days = 5;
+
+                        // Show workout plan after a short delay
+                        setTimeout(() => {
+                            showWorkoutPlan(days);
+                        }, 1000);
+                    }
                 } else {
                     addMessage(`Oops! Something went wrong: ${data.error || 'Unknown error'}`, false);
                 }
