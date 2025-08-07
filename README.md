@@ -98,6 +98,36 @@ Bot: Catch you later. Stay strong.
 ' - Regex (for parameter extraction)
 
 ' -----------------------------------------------------
+' Optional: Use an open‑source GPT model (Ollama)
+' -----------------------------------------------------
+
+' You can switch the bot to use a local open‑source LLM (e.g., Llama 3, Mistral)
+' via [Ollama](https://ollama.com). This keeps everything running locally.
+
+' 1) Install Ollama (macOS/Linux/Windows):
+'    Follow the instructions on their website and start the Ollama service.
+
+' 2) Pull a model (examples below):
+'    ollama pull llama3.1
+'    # or
+'    ollama pull mistral
+
+' 3) Install Python deps for the client:
+'    pip install -r requirements.txt
+
+' 4) Run the web app with LLM enabled:
+'    # defaults: OLLAMA_BASE_URL=http://localhost:11434, OLLAMA_MODEL=llama3.1
+'    USE_LLM=true python app.py
+
+'    Optional overrides:
+'    OLLAMA_MODEL=mistral USE_LLM=true python app.py
+'    OLLAMA_BASE_URL=http://127.0.0.1:11434 USE_LLM=true python app.py
+
+' Notes:
+' - When USE_LLM=false (default), the rule‑based chatbot runs as before.
+' - The system prompt is tuned for concise fitness coaching.
+
+' -----------------------------------------------------
 ' Requirements
 ' -----------------------------------------------------
 ' - Python 3.x

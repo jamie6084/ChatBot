@@ -6,12 +6,18 @@ Provides a REST API endpoint for chat functionality.
 
 from flask import Flask, request, jsonify, render_template
 from chatbot import FitnessChatbot
+import os
+from llm_client import OllamaClient, DEFAULT_FITNESS_SYSTEM_PROMPT
 import json
 
 app = Flask(__name__)
 
-# Initialize the chatbot
+# Configure response engine: rules (default) or LLM via Ollama
+USE_LLM = os.getenv("USE_LLM", "false").lower() in {"1", "true", "yes", "on"}
+
+# Initialize engines
 chatbot = FitnessChatbot()
+ollama_client = OllamaClient() if USE_LLM else None
 
 @app.route('/')
 def index():
@@ -38,8 +44,14 @@ def chat():
                 'error': 'Message cannot be empty'
             }), 400
         
-        # Process the message through the chatbot
-        bot_response = chatbot.process_input(user_message)
+        # Route to selected engine
+        if USE_LLM and ollama_client is not None:
+            bot_response = ollama_client.chat(
+                user_message,
+                system_prompt=DEFAULT_FITNESS_SYSTEM_PROMPT,
+            )
+        else:
+            bot_response = chatbot.process_input(user_message)
         
         # Return the response
         return jsonify({
