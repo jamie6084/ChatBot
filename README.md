@@ -127,6 +127,55 @@ Bot: Catch you later. Stay strong.
 ' - When USE_LLM=false (default), the rule‑based chatbot runs as before.
 ' - The system prompt is tuned for concise fitness coaching.
 
+### End‑to‑end setup for GPT‑OSS (copy/paste)
+
+Use these commands on macOS to get everything running locally with a GPT‑OSS model via Ollama.
+
+1) Python 3.11 and virtual environment
+
+```
+brew install python@3.11
+/opt/homebrew/bin/python3.11 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+python -m spacy download en_core_web_sm
+```
+
+2) Install Ollama and pull a model
+
+```
+brew install --cask ollama
+ollama pull llama3.1
+```
+
+3) Start the app with GPT‑OSS enabled
+
+- Default (port 5000):
+```
+USE_LLM=true OLLAMA_MODEL=llama3.1 python app.py
+```
+
+- If port 5000 is in use (AirPlay Receiver commonly uses it), either free it in System Settings → General → AirDrop & Handoff, or run on port 5050 using:
+```
+USE_LLM=true OLLAMA_MODEL=llama3.1 python -c "from app import app; app.run(host='0.0.0.0', port=5050, debug=True)"
+```
+
+4) Verify it’s working
+
+```
+curl -s http://localhost:5000/health || curl -s http://localhost:5050/health
+curl -s -X POST http://localhost:5000/chat -H 'Content-Type: application/json' -d '{"message":"give me a 3 day workout"}' \
+  || curl -s -X POST http://localhost:5050/chat -H 'Content-Type: application/json' -d '{"message":"give me a 3 day workout"}'
+```
+
+Open in a browser:
+- http://localhost:5000 (default) or http://localhost:5050 (alternate)
+
+Environment variables:
+- `USE_LLM=true` to enable the Ollama LLM path
+- `OLLAMA_MODEL` sets the model (default `llama3.1`)
+- `OLLAMA_BASE_URL` points to the Ollama server (default `http://localhost:11434`)
+
 ' -----------------------------------------------------
 ' Requirements
 ' -----------------------------------------------------
